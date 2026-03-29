@@ -19,7 +19,7 @@ body {
   border-radius: 10px;
 }
 input, select, button {
-  width: 90%;
+  width: 100%;
   padding: 12px;
   margin-top: 10px;
   font-size: 16px;
@@ -36,7 +36,6 @@ button {
   background: #eee;
   padding: 10px;
 }
-<button onclick="goToJoin()">가입 페이지 열기</button>
 </style>
 </head>
 
@@ -47,19 +46,28 @@ button {
 
 <input id="name" placeholder="이름">
 <input id="birth" placeholder="생년월일+성별 (예: 8709271)">
+
 <select id="carrier">
   <option>SKT</option>
   <option>KT</option>
   <option>LG</option>
 </select>
+
 <input id="phone" placeholder="전화번호 (숫자만)">
 
 <button onclick="generate()">가입 준비</button>
+<button onclick="goToJoin()">가입 페이지 열기</button>
+
+<button onclick="copyEmail()">이메일 복사</button>
+<button onclick="copyPassword()">비밀번호 복사</button>
+<button onclick="copySimple()">간편비밀번호 복사</button>
 
 <div class="result" id="result"></div>
 </div>
 
 <script>
+
+// 계정 생성
 function generate() {
 
 let phone = document.getElementById("phone").value.replace(/[^0-9]/g, "");
@@ -70,7 +78,7 @@ let phoneWithout010 = phone.replace(/^010/, "");
 // 이메일 생성
 let email = "familyhub+" + phoneWithout010 + "@gmail.com";
 
-// 중앙 4자리 추출 (010 제외 후 앞 4자리)
+// 중앙 4자리
 let middle4 = phoneWithout010.substring(0, 4);
 
 // 뒤 4자리
@@ -82,13 +90,50 @@ let password = "han" + middle4 + "!@";
 // 간편비밀번호
 let simplePassword = last4;
 
-// 결과 출력
+// 저장 (다른 버튼에서도 사용)
+localStorage.setItem("email", email);
+localStorage.setItem("password", password);
+localStorage.setItem("simplePassword", simplePassword);
+
+// 화면 출력
 document.getElementById("result").innerHTML =
 "이메일: " + email + "<br>" +
 "비밀번호: " + password + "<br>" +
 "간편비밀번호: " + simplePassword;
 
 }
+
+// 가입 페이지 이동
+function goToJoin() {
+
+let email = localStorage.getItem("email");
+
+if (!email) {
+  alert("먼저 가입 준비를 눌러주세요");
+  return;
+}
+
+// 기아 가입 페이지
+window.open("https://account.kia.com/auth/api/v2/user/oauth2/authorize?action=create&response_type=code&client_id=0024485b-4c6c-45c8-86eb-2a678adcc34e&redirect_uri=https%3A%2F%2Fwww.kia.com%2Fkr%2Fservices%2Fko%2Fauthentication.signUpCheck&state=connector&scope=openid+email+name+birthdate+gender+phone+ci+profile&locale=ko_KR", "_blank");
+
+}
+
+// 복사 기능
+function copyEmail() {
+navigator.clipboard.writeText(localStorage.getItem("email"));
+alert("이메일 복사됨");
+}
+
+function copyPassword() {
+navigator.clipboard.writeText(localStorage.getItem("password"));
+alert("비밀번호 복사됨");
+}
+
+function copySimple() {
+navigator.clipboard.writeText(localStorage.getItem("simplePassword"));
+alert("간편비밀번호 복사됨");
+}
+
 </script>
 
 </body>
