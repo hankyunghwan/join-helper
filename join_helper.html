@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>가입 도우미</title>
+
+<style>
+body {
+  font-family: Arial;
+  padding: 20px;
+  background: #f5f5f5;
+}
+.container {
+  max-width: 400px;
+  margin: auto;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+}
+input, select, button {
+  width: 90%;
+  padding: 12px;
+  margin-top: 10px;
+  font-size: 16px;
+}
+button {
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+.result {
+  margin-top: 15px;
+  font-size: 14px;
+  background: #eee;
+  padding: 10px;
+}
+<button onclick="goToJoin()">가입 페이지 열기</button>
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h2>🚗 가입 도우미</h2>
+
+<input id="name" placeholder="이름">
+<input id="birth" placeholder="생년월일+성별 (예: 8709271)">
+<select id="carrier">
+  <option>SKT</option>
+  <option>KT</option>
+  <option>LG</option>
+</select>
+<input id="phone" placeholder="전화번호 (숫자만)">
+
+<button onclick="generate()">가입 준비</button>
+
+<div class="result" id="result"></div>
+</div>
+
+<script>
+function generate() {
+
+let phone = document.getElementById("phone").value.replace(/[^0-9]/g, "");
+
+// 010 제거
+let phoneWithout010 = phone.replace(/^010/, "");
+
+// 이메일 생성
+let email = "familyhub+" + phoneWithout010 + "@gmail.com";
+
+// 중앙 4자리 추출 (010 제외 후 앞 4자리)
+let middle4 = phoneWithout010.substring(0, 4);
+
+// 뒤 4자리
+let last4 = phone.slice(-4);
+
+// 비밀번호
+let password = "han" + middle4 + "!@";
+
+// 간편비밀번호
+let simplePassword = last4;
+
+// 결과 출력
+document.getElementById("result").innerHTML =
+"이메일: " + email + "<br>" +
+"비밀번호: " + password + "<br>" +
+"간편비밀번호: " + simplePassword;
+
+}
+</script>
+
+</body>
+</html>
